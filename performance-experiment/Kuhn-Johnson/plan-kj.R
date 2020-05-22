@@ -97,7 +97,28 @@ plan <- drake_plan(
       dynamic = map(ncv_dat_2000)
    ),
    perf_results_2000 = tibble(n = 2000, repeats = repeats) %>%
-      bind_cols(ncv_results_2000)
+      bind_cols(ncv_results_2000),
+   
+   # sample size = 3000
+   sim_dat_3000 = mlbench_data(3000),
+   params_list_3000 = create_grids(sim_dat_3000,
+                                  algorithms,
+                                  size = grid_size),
+   ncv_dat_3000 = create_ncv_objects(sim_dat_3000,
+                                    repeats,
+                                    method),
+   ncv_results_3000 = target(
+      run_ncv(ncv_dat_3000,
+              sim_dat_3000,
+              large_dat,
+              mod_FUN_list,
+              params_list_3000,
+              error_FUN,
+              method),
+      dynamic = map(ncv_dat_3000)
+   ),
+   perf_results_3000 = tibble(n = 3000, repeats = repeats) %>%
+      bind_cols(ncv_results_3000)
    
 )
 
